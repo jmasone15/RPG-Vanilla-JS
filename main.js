@@ -1,3 +1,4 @@
+import { GameLoop } from './src/GameLoop';
 import { resources } from './src/Resource';
 import { Sprite } from './src/Sprite';
 import { Vector2 } from './src/Vector2';
@@ -28,6 +29,10 @@ const shadow = new Sprite({
 	frameSize: new Vector2(32, 32)
 });
 
+const update = () => {
+	// Updating entities in the game
+};
+
 // Function that handles drawing resources to the context
 const draw = () => {
 	sky.drawImage(ctx, 0, 0);
@@ -45,7 +50,5 @@ const draw = () => {
 	hero.drawImage(ctx, heroPosition.x, heroPosition.y);
 };
 
-// Temporary Game Loop esque function
-setInterval(() => {
-	draw();
-}, 300);
+const gameLoop = new GameLoop(update, draw);
+gameLoop.start();
