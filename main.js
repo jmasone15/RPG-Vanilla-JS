@@ -2,6 +2,7 @@ import { GameLoop } from './src/GameLoop';
 import { resources } from './src/Resource';
 import { Sprite } from './src/Sprite';
 import { Vector2 } from './src/Vector2';
+import { DIRECTIONS, Input } from './src/Input';
 
 // The canvas is an HTML element that allows for graphics rendering.
 // A canvas' context is the JavaScript object that provides methods, properties, and objects for manipulating said graphics on the canvas.
@@ -29,8 +30,24 @@ const shadow = new Sprite({
 	frameSize: new Vector2(32, 32)
 });
 
+const heroPos = new Vector2(16 * 8, 16 * 5);
+const input = new Input();
+
 const update = () => {
 	// Updating entities in the game
+	if (input.direction === DIRECTIONS.DOWN) {
+		heroPos.y += 1;
+		hero.frame = 0;
+	} else if (input.direction === DIRECTIONS.UP) {
+		heroPos.y -= 1;
+		hero.frame = 6;
+	} else if (input.direction === DIRECTIONS.LEFT) {
+		heroPos.x -= 1;
+		hero.frame = 9;
+	} else if (input.direction === DIRECTIONS.RIGHT) {
+		heroPos.x += 1;
+		hero.frame = 3;
+	}
 };
 
 // Function that handles drawing resources to the context
@@ -39,7 +56,6 @@ const draw = () => {
 	map.drawImage(ctx, 120, 40);
 
 	// Center the Hero in the cell
-	const heroPos = new Vector2(16 * 8, 16 * 5);
 	const heroOffset = new Vector2(-15, -10);
 	const heroPosition = new Vector2(
 		heroPos.x + heroOffset.x,
