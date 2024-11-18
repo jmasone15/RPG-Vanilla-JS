@@ -3,6 +3,8 @@ import { resources } from './src/Resource';
 import { Sprite } from './src/Sprite';
 import { Vector2 } from './src/Vector2';
 import { DIRECTIONS, Input } from './src/Input';
+import { gridCells } from './src/helpers/grid';
+import { moveTowards } from './src/helpers/moveTowards';
 
 // The canvas is an HTML element that allows for graphics rendering.
 // A canvas' context is the JavaScript object that provides methods, properties, and objects for manipulating said graphics on the canvas.
@@ -23,31 +25,56 @@ const hero = new Sprite({
 	frameSize: new Vector2(32, 32),
 	hFrames: 3,
 	vFrames: 8,
-	frame: 1
+	frame: 1,
+	position: new Vector2(gridCells(8), gridCells(5))
 });
 const shadow = new Sprite({
 	resouce: resources.images.shadow,
 	frameSize: new Vector2(32, 32)
 });
 
-const heroPos = new Vector2(16 * 8, 16 * 5);
+// Game Variables
 const input = new Input();
 
 const update = () => {
-	// Updating entities in the game
+	// Every frame, move the hero 1px closer to their destination.
+	const distance = moveTowards(hero, hero.destinationPosition, 1);
+
+	// Once destination has been reached, see if the player is holding down a movement key.
+	if (distance <= 0.75) {
+		tryMove();
+	}
+
+	return;
+};
+
+const tryMove = () => {
+	if (!input.direction) {
+		return;
+	}
+
+	// Default the next X and Y to the current hero position
+	const nextPos = hero.position.duplicate();
+	const gridSize = 16;
+
 	if (input.direction === DIRECTIONS.DOWN) {
-		heroPos.y += 1;
+		nextPos.y += gridSize;
 		hero.frame = 0;
 	} else if (input.direction === DIRECTIONS.UP) {
-		heroPos.y -= 1;
+		nextPos.y -= gridSize;
 		hero.frame = 6;
 	} else if (input.direction === DIRECTIONS.LEFT) {
-		heroPos.x -= 1;
+		nextPos.x -= gridSize;
 		hero.frame = 9;
 	} else if (input.direction === DIRECTIONS.RIGHT) {
-		heroPos.x += 1;
+		nextPos.x += gridSize;
 		hero.frame = 3;
 	}
+
+	// TODO - Check if that space is free.
+	// Set the next heroPosition to
+	hero.destinationPosition.x = nextPos.x;
+	hero.destinationPosition.y = nextPos.y;
 };
 
 // Function that handles drawing resources to the context
@@ -56,10 +83,10 @@ const draw = () => {
 	map.drawImage(ctx, 120, 40);
 
 	// Center the Hero in the cell
-	const heroOffset = new Vector2(-15, -10);
+	const heroOffset = new Vector2(-16, -10);
 	const heroPosition = new Vector2(
-		heroPos.x + heroOffset.x,
-		heroPos.y + heroOffset.y
+		hero.position.x + heroOffset.x,
+		hero.position.y + heroOffset.y
 	);
 
 	shadow.drawImage(ctx, heroPosition.x, heroPosition.y);

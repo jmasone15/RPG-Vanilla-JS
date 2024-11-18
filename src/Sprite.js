@@ -18,6 +18,7 @@ export class Sprite {
 		this.frameMap = new Map();
 		this.scale = scale ?? 1;
 		this.position = position ?? new Vector2(0, 0);
+		this.destinationPosition = this.position.duplicate();
 
 		this.buildFrameMap();
 	}
