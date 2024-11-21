@@ -3,8 +3,9 @@ import { resources } from './src/Resource';
 import { Sprite } from './src/Sprite';
 import { Vector2 } from './src/Vector2';
 import { DIRECTIONS, Input } from './src/Input';
-import { gridCells } from './src/helpers/grid';
+import { gridCells, isSpaceFree } from './src/helpers/grid';
 import { moveTowards } from './src/helpers/moveTowards';
+import { walls } from './src/levels/levelOne';
 
 // The canvas is an HTML element that allows for graphics rendering.
 // A canvas' context is the JavaScript object that provides methods, properties, and objects for manipulating said graphics on the canvas.
@@ -41,7 +42,7 @@ const update = () => {
 	const distance = moveTowards(hero, hero.destinationPosition, 1);
 
 	// Once destination has been reached, see if the player is holding down a movement key.
-	if (distance <= 0.75) {
+	if (distance < 1) {
 		tryMove();
 	}
 
@@ -59,22 +60,33 @@ const tryMove = () => {
 
 	if (input.direction === DIRECTIONS.DOWN) {
 		nextPos.y += gridSize;
-		hero.frame = 0;
 	} else if (input.direction === DIRECTIONS.UP) {
 		nextPos.y -= gridSize;
-		hero.frame = 6;
 	} else if (input.direction === DIRECTIONS.LEFT) {
 		nextPos.x -= gridSize;
-		hero.frame = 9;
 	} else if (input.direction === DIRECTIONS.RIGHT) {
 		nextPos.x += gridSize;
-		hero.frame = 3;
 	}
 
-	// TODO - Check if that space is free.
-	// Set the next heroPosition to
-	hero.destinationPosition.x = nextPos.x;
-	hero.destinationPosition.y = nextPos.y;
+	// Validate destination position here to determine if hero moves and which frame to show.
+	const spaceFreeCheck = isSpaceFree(walls, nextPos.x, nextPos.y);
+
+	// Update the hero's frame based on direction and if they can move to the next space.
+	if (input.direction === DIRECTIONS.DOWN) {
+		hero.movingOrStandingFrame(spaceFreeCheck, 0, 1);
+	} else if (input.direction === DIRECTIONS.UP) {
+		hero.movingOrStandingFrame(spaceFreeCheck, 6, 7);
+	} else if (input.direction === DIRECTIONS.LEFT) {
+		hero.movingOrStandingFrame(spaceFreeCheck, 9, 10);
+	} else if (input.direction === DIRECTIONS.RIGHT) {
+		hero.movingOrStandingFrame(spaceFreeCheck, 3, 4);
+	}
+
+	// Update the hero's destination within the sprite if destination is free.
+	if (spaceFreeCheck) {
+		hero.destinationPosition.x = nextPos.x;
+		hero.destinationPosition.y = nextPos.y;
+	}
 };
 
 // Function that handles drawing resources to the context

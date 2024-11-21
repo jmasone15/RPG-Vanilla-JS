@@ -39,6 +39,14 @@ export class Sprite {
 		}
 	}
 
+	movingOrStandingFrame(isSpaceFree, movingFrame, stillFrame) {
+		if (isSpaceFree) {
+			this.frame = movingFrame;
+		} else {
+			this.frame = stillFrame;
+		}
+	}
+
 	drawImage(ctx, x, y) {
 		// Ensure the Resources constructor has finished running and target image is loaded into memory.
 		if (!this.resouce.isLoaded) {

@@ -22,6 +22,7 @@ export const moveTowards = (sprite, destination, speed) => {
 		// Recalculate remaining distance after ther move.
 		distanceToTravelX = destination.x - sprite.position.x;
 		distanceToTravelY = destination.y - sprite.position.y;
+
 		distance = determineDistance(distanceToTravelX, distanceToTravelY);
 	}
 
