@@ -8,7 +8,8 @@ export class Sprite {
 		vFrames, // how the sprite sheet is arranged vertically
 		frame, // which frame of the sprite we want to show
 		scale, // how large to draw this image
-		position // where to draw the image (top left corner)
+		position, // where to draw the image (top left corner)
+		animations
 	}) {
 		this.resouce = resouce;
 		this.frameSize = frameSize ?? new Vector2(16, 16);
@@ -19,7 +20,7 @@ export class Sprite {
 		this.scale = scale ?? 1;
 		this.position = position ?? new Vector2(0, 0);
 		this.destinationPosition = this.position.duplicate();
-
+		this.animations = animations ?? null;
 		this.buildFrameMap();
 	}
 
@@ -39,11 +40,26 @@ export class Sprite {
 		}
 	}
 
-	movingOrStandingFrame(isSpaceFree, movingFrame, stillFrame) {
+	step(delta) {
+		if (!this.animations) {
+			return;
+		}
+
+		// Pass in the delta time from GameLoop for animations to run.
+		this.animations.step(delta);
+		// Set the current frame every frame based on the progress of the animation pattern.
+		this.frame = this.animations.frame;
+	}
+
+	movingOrStandingAnimation(
+		isSpaceFree,
+		movingAnimationKey,
+		standingAnimationKey
+	) {
 		if (isSpaceFree) {
-			this.frame = movingFrame;
+			this.animations.play(movingAnimationKey);
 		} else {
-			this.frame = stillFrame;
+			this.animations.play(standingAnimationKey);
 		}
 	}
 

@@ -6,6 +6,9 @@ import { DIRECTIONS, Input } from './src/Input';
 import { gridCells, isSpaceFree } from './src/helpers/grid';
 import { moveTowards } from './src/helpers/moveTowards';
 import { walls } from './src/levels/levelOne';
+import { Animations } from './src/Animations';
+import { FrameIndexPattern } from './src/FrameIndexPattern';
+import { heroAnimations } from './src/objects/Hero/heroAnimations';
 
 // The canvas is an HTML element that allows for graphics rendering.
 // A canvas' context is the JavaScript object that provides methods, properties, and objects for manipulating said graphics on the canvas.
@@ -27,7 +30,17 @@ const hero = new Sprite({
 	hFrames: 3,
 	vFrames: 8,
 	frame: 1,
-	position: new Vector2(gridCells(8), gridCells(5))
+	position: new Vector2(gridCells(8), gridCells(5)),
+	animations: new Animations({
+		walkDown: new FrameIndexPattern(heroAnimations.WALK_DOWN),
+		walkUp: new FrameIndexPattern(heroAnimations.WALK_UP),
+		walkLeft: new FrameIndexPattern(heroAnimations.WALK_LEFT),
+		walkRight: new FrameIndexPattern(heroAnimations.WALK_RIGHT),
+		standDown: new FrameIndexPattern(heroAnimations.STAND_DOWN),
+		standUp: new FrameIndexPattern(heroAnimations.STAND_UP),
+		standLeft: new FrameIndexPattern(heroAnimations.STAND_LEFT),
+		standRight: new FrameIndexPattern(heroAnimations.STAND_RIGHT)
+	})
 });
 const shadow = new Sprite({
 	resouce: resources.images.shadow,
@@ -36,8 +49,9 @@ const shadow = new Sprite({
 
 // Game Variables
 const input = new Input();
+let heroFacing = DIRECTIONS.DOWN;
 
-const update = () => {
+const update = (delta) => {
 	// Every frame, move the hero 1px closer to their destination.
 	const distance = moveTowards(hero, hero.destinationPosition, 1);
 
@@ -46,11 +60,26 @@ const update = () => {
 		tryMove();
 	}
 
-	return;
+	// Kicks off Hero Animations
+	hero.step(delta);
 };
 
 const tryMove = () => {
 	if (!input.direction) {
+		switch (heroFacing) {
+			case DIRECTIONS.LEFT:
+				hero.animations.play('standLeft');
+				break;
+			case DIRECTIONS.RIGHT:
+				hero.animations.play('standRight');
+				break;
+			case DIRECTIONS.UP:
+				hero.animations.play('standUp');
+				break;
+			default:
+				hero.animations.play('standDown');
+				break;
+		}
 		return;
 	}
 
@@ -67,19 +96,20 @@ const tryMove = () => {
 	} else if (input.direction === DIRECTIONS.RIGHT) {
 		nextPos.x += gridSize;
 	}
+	heroFacing = input.direction ?? heroFacing;
 
-	// Validate destination position here to determine if hero moves and which frame to show.
+	// Validate destination position here to determine if hero moves and which animation to show.
 	const spaceFreeCheck = isSpaceFree(walls, nextPos.x, nextPos.y);
 
-	// Update the hero's frame based on direction and if they can move to the next space.
+	// Update the hero's animation based on direction and if they can move to the next space.
 	if (input.direction === DIRECTIONS.DOWN) {
-		hero.movingOrStandingFrame(spaceFreeCheck, 0, 1);
+		hero.movingOrStandingAnimation(spaceFreeCheck, 'walkDown', 'standDown');
 	} else if (input.direction === DIRECTIONS.UP) {
-		hero.movingOrStandingFrame(spaceFreeCheck, 6, 7);
+		hero.movingOrStandingAnimation(spaceFreeCheck, 'walkUp', 'standUp');
 	} else if (input.direction === DIRECTIONS.LEFT) {
-		hero.movingOrStandingFrame(spaceFreeCheck, 9, 10);
+		hero.movingOrStandingAnimation(spaceFreeCheck, 'walkLeft', 'standLeft');
 	} else if (input.direction === DIRECTIONS.RIGHT) {
-		hero.movingOrStandingFrame(spaceFreeCheck, 3, 4);
+		hero.movingOrStandingAnimation(spaceFreeCheck, 'walkRight', 'standRight');
 	}
 
 	// Update the hero's destination within the sprite if destination is free.
