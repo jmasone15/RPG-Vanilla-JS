@@ -1,6 +1,7 @@
+import { GameObject } from './GameObject';
 import { Vector2 } from './Vector2';
 
-export class Sprite {
+export class Sprite extends GameObject {
 	constructor({
 		resouce, // image we want to draw
 		frameSize, // size of the crop of the image
@@ -9,8 +10,11 @@ export class Sprite {
 		frame, // which frame of the sprite we want to show
 		scale, // how large to draw this image
 		position, // where to draw the image (top left corner)
+		offset,
 		animations
 	}) {
+		super({});
+
 		this.resouce = resouce;
 		this.frameSize = frameSize ?? new Vector2(16, 16);
 		this.hFrames = hFrames ?? 1;
@@ -19,6 +23,7 @@ export class Sprite {
 		this.frameMap = new Map();
 		this.scale = scale ?? 1;
 		this.position = position ?? new Vector2(0, 0);
+		this.offset = offset ?? new Vector2(0, 0);
 		this.destinationPosition = this.position.duplicate();
 		this.animations = animations ?? null;
 		this.buildFrameMap();
