@@ -45,6 +45,7 @@ export class Hero extends GameObject {
 		this.facingDirection = DIRECTIONS.DOWN;
 	}
 
+	// Root is the parent GameObject of the mainScene, we pass it through to get access to the Input class.
 	step(delta, root) {
 		// Every frame, move the hero 1px closer to their destination.
 		const distance = moveTowards(this.body, this.body.destinationPosition, 1);

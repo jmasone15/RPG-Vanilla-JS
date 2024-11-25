@@ -18,7 +18,10 @@ const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext('2d');
 
 // Main Game Object of the current Level.
+// Figure out a way to change the mainScene per level.
 const mainScene = new GameObject({});
+
+// Give the mainScene the Input class of eventListeners so it can be referenced by children.
 mainScene.input = new Input();
 
 // Sprites
@@ -33,16 +36,17 @@ const map = new Sprite({
 });
 const hero = new Hero();
 
+// Add sprites to mainScene so they trigger in the class' update and render functions
 mainScene.addChildren([sky, map, hero]);
 
+// Entry points for the mainScene update and draw methods.
 const update = (delta) => {
 	mainScene.stepEntry(delta, mainScene);
 };
-
-// Function that handles drawing resources to the context
 const draw = () => {
 	mainScene.draw(ctx, 0, 0);
 };
 
+// Pass in the update and draw methods to kick off GameLoop and Main Scene
 const gameLoop = new GameLoop(update, draw);
 gameLoop.start();

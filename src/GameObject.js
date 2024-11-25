@@ -1,7 +1,15 @@
 import { Vector2 } from './Vector2';
 
+// This class works as any generic object within the game. All other objects within the game should be extended from this.
+// It has it's own step method, draw method, and a parent child relationship functionality.
+
+// Any class that extends from this GameObject must have a step method and optionally a drawImage method. Those two methods are left blank here to be controlled by the extended classes.
+// The stepEntry method recursively calls all of the children's step method first before calling the parent, allowing all children of the parent to update their internal state before the parent updates.
+// The draw method works in a similar way, alternatively we draw the parent's content first before drawing the children's content recursively. This way it builds the scene from the ground up.
 export class GameObject {
-	constructor({ position, offset, input }) {
+	constructor({ position, offset }) {
+		// The position and offset properties are optional, the draw method would error out without these here.
+		// Both position and offset should be handled at the sprite level.
 		this.position = position ?? new Vector2(0, 0);
 		this.offset = offset ?? new Vector2(0, 0);
 		this.children = [];
