@@ -1,3 +1,10 @@
+// This system works as an anonymous event system. Any object that needs to emit/listen to an event, does not need to know the other emitters/listeners.
+
+// Any object within the game can call the emit method, doing so will ensure that any objects that have "subscribed" to the event (by name)...
+// will have the callback they passed in run at that time. Allowing for these events to only run when called and the callbacks to only run when needed.
+
+// Objects can also unsubscribe from said events, i.e. if an item is picked it is no longer listening.
+
 class Events {
 	callbacks = [];
 	nextId = 0;
