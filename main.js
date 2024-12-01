@@ -11,6 +11,7 @@ import { FrameIndexPattern } from './src/FrameIndexPattern';
 import { heroAnimations } from './src/objects/Hero/heroAnimations';
 import { GameObject } from './src/GameObject';
 import { Hero } from './src/objects/Hero/Hero';
+import { events } from './src/Events';
 
 // The canvas is an HTML element that allows for graphics rendering.
 // A canvas' context is the JavaScript object that provides methods, properties, and objects for manipulating said graphics on the canvas.
@@ -18,11 +19,13 @@ const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext('2d');
 
 // Main Game Object of the current Level.
-// Figure out a way to change the mainScene per level.
 const mainScene = new GameObject({});
 
 // Give the mainScene the Input class of eventListeners so it can be referenced by children.
 mainScene.input = new Input();
+events.on('HERO_POSITION', mainScene, (heroPosition) => {
+	console.log('HERO MOVED!', heroPosition);
+});
 
 // Sprites
 const sky = new Sprite({

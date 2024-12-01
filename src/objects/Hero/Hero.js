@@ -9,6 +9,7 @@ import { heroAnimations } from './heroAnimations';
 import { moveTowards } from '../../helpers/moveTowards';
 import { gridCells, isSpaceFree } from '../../helpers/grid';
 import { walls } from '../../levels/levelOne';
+import { events } from '../../Events';
 
 export class Hero extends GameObject {
 	constructor() {
@@ -54,6 +55,22 @@ export class Hero extends GameObject {
 		if (distance < 1) {
 			this.tryMove(root.input);
 		}
+
+		this.tryEmitPosition();
+	}
+
+	tryEmitPosition() {
+		if (
+			this.lastX === this.body.position.x &&
+			this.lastY === this.body.position.y
+		) {
+			return;
+		}
+
+		this.lastX = this.body.position.x;
+		this.lastY = this.body.position.y;
+
+		events.emit('HERO_POSITION', this.body.position);
 	}
 
 	tryMove(input) {
