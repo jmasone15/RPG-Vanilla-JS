@@ -3,7 +3,7 @@ import { Vector2 } from './Vector2';
 
 export class Sprite extends GameObject {
 	constructor({
-		resouce, // image we want to draw
+		resource, // image we want to draw
 		frameSize, // size of the crop of the image
 		hFrames, // how the sprite sheet is arranged horizontally
 		vFrames, // how the sprite sheet is arranged vertically
@@ -15,7 +15,7 @@ export class Sprite extends GameObject {
 	}) {
 		super({});
 
-		this.resouce = resouce;
+		this.resource = resource;
 		this.frameSize = frameSize ?? new Vector2(16, 16);
 		this.hFrames = hFrames ?? 1;
 		this.vFrames = vFrames ?? 1;
@@ -70,7 +70,7 @@ export class Sprite extends GameObject {
 
 	drawImage(ctx, x, y) {
 		// Ensure the Resources constructor has finished running and target image is loaded into memory.
-		if (!this.resouce.isLoaded) {
+		if (!this.resource.isLoaded) {
 			return;
 		}
 
@@ -88,7 +88,7 @@ export class Sprite extends GameObject {
 
 		// Run the Canvas Context draw method with the passed in Sprite properties.
 		ctx.drawImage(
-			this.resouce.image,
+			this.resource.image,
 			frameX, // X and Y location in the sprite sheet
 			frameY,
 			this.frameSize.x, // X and Y size to crop from sprite sheet

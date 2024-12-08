@@ -5,7 +5,8 @@ class Resources {
 			sky: '/images/sky.png',
 			map: '/images/smallMap.png',
 			hero: '/images/hero-sheet.png',
-			shadow: '/images/shadow.png'
+			shadow: '/images/shadow.png',
+			rod: '/images/rod.png'
 		};
 
 		// A bucket to keep all of our images

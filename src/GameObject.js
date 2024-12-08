@@ -1,3 +1,4 @@
+import { events } from './Events';
 import { Vector2 } from './Vector2';
 
 // This class works as any generic object within the game. All other objects within the game should be extended from this.
@@ -12,6 +13,7 @@ export class GameObject {
 		// Both position and offset should be handled at the sprite level.
 		this.position = position ?? new Vector2(0, 0);
 		this.offset = offset ?? new Vector2(0, 0);
+		this.parent = null;
 		this.children = [];
 	}
 
@@ -46,6 +48,7 @@ export class GameObject {
 	}
 
 	addChild(gameObject) {
+		gameObject.parent = this;
 		this.children.push(gameObject);
 	}
 
@@ -56,8 +59,17 @@ export class GameObject {
 	}
 
 	removeChild(gameObject) {
+		events.unsubscribe(gameObject);
 		this.children = this.children.filter((child) => {
 			return gameObject !== child;
 		});
+	}
+
+	destroy() {
+		this.children.forEach((child) => {
+			child.destroy();
+		});
+
+		this.parent.removeChild(this);
 	}
 }

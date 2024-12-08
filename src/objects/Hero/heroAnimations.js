@@ -44,5 +44,14 @@ export const heroAnimations = {
 	STAND_DOWN: makeStandingFrames(1),
 	STAND_RIGHT: makeStandingFrames(4),
 	STAND_UP: makeStandingFrames(7),
-	STAND_LEFT: makeStandingFrames(10)
+	STAND_LEFT: makeStandingFrames(10),
+	PICK_UP_DOWN: {
+		duration: 400,
+		frames: [
+			{
+				time: 0,
+				frame: 12
+			}
+		]
+	}
 };

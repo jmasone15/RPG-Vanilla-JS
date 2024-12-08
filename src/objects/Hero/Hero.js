@@ -12,16 +12,16 @@ import { walls } from '../../levels/levelOne';
 import { events } from '../../Events';
 
 export class Hero extends GameObject {
-	constructor() {
+	constructor(x, y) {
 		super({});
 
 		this.body = new Sprite({
-			resouce: resources.images.hero,
+			resource: resources.images.hero,
 			frameSize: new Vector2(32, 32),
 			hFrames: 3,
 			vFrames: 8,
 			frame: 1,
-			position: new Vector2(gridCells(10), gridCells(3)),
+			position: new Vector2(x, y),
 			offset: new Vector2(-17, -9),
 			animations: new Animations({
 				walkDown: new FrameIndexPattern(heroAnimations.WALK_DOWN),
@@ -31,12 +31,13 @@ export class Hero extends GameObject {
 				standDown: new FrameIndexPattern(heroAnimations.STAND_DOWN),
 				standUp: new FrameIndexPattern(heroAnimations.STAND_UP),
 				standLeft: new FrameIndexPattern(heroAnimations.STAND_LEFT),
-				standRight: new FrameIndexPattern(heroAnimations.STAND_RIGHT)
+				standRight: new FrameIndexPattern(heroAnimations.STAND_RIGHT),
+				pickUpDown: new FrameIndexPattern(heroAnimations.PICK_UP_DOWN)
 			})
 		});
 
 		const shadow = new Sprite({
-			resouce: resources.images.shadow,
+			resource: resources.images.shadow,
 			frameSize: new Vector2(32, 32),
 			position: this.body.position,
 			offset: this.body.offset
@@ -44,10 +45,21 @@ export class Hero extends GameObject {
 
 		this.addChildren([shadow, this.body]);
 		this.facingDirection = DIRECTIONS.DOWN;
+		this.itemPickupTime = 0;
+		this.itemPickupShell = null;
+
+		events.on('HERO_ITEM_PICKUP', this, ({ image, position }) => {
+			this.onItemPickup(image, position);
+		});
 	}
 
 	// Root is the parent GameObject of the mainScene, we pass it through to get access to the Input class.
 	step(delta, root) {
+		if (this.itemPickupTime > 0) {
+			this.workOnItemPickup(delta);
+			return;
+		}
+
 		// Every frame, move the hero 1px closer to their destination.
 		const distance = moveTowards(this.body, this.body.destinationPosition, 1);
 
@@ -137,6 +149,36 @@ export class Hero extends GameObject {
 		if (spaceFreeCheck) {
 			this.body.destinationPosition.x = nextPos.x;
 			this.body.destinationPosition.y = nextPos.y;
+		}
+	}
+
+	onItemPickup(image, position) {
+		// Make sure we land right on the item
+		this.body.destinationPosition = position.duplicate();
+
+		// Start the item pickup animation
+		this.itemPickupTime = 1000;
+
+		// Create a new game object of the item that was picked up.
+		this.itemPickupShell = new GameObject({});
+		this.itemPickupShell.addChild(
+			new Sprite({
+				resource: image,
+				// Translate the position of the picked up item to be just above the hero's head.
+				position: new Vector2(position.x, position.y - 13),
+				offset: new Vector2(-8, 5)
+			})
+		);
+		this.addChild(this.itemPickupShell);
+	}
+
+	workOnItemPickup(delta) {
+		this.itemPickupTime -= delta;
+		this.body.animations.play('pickUpDown');
+
+		// Once animation is finished, remove the newly created GameObject above the hero's head.
+		if (this.itemPickupTime <= 0) {
+			this.itemPickupShell.destroy();
 		}
 	}
 }

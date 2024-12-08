@@ -6,6 +6,8 @@ import { Input } from './src/Input';
 import { GameObject } from './src/GameObject';
 import { Hero } from './src/objects/Hero/Hero';
 import { Camera } from './src/Camera';
+import { Rod } from './src/objects/Rod/Rod';
+import { gridCells } from './src/helpers/grid';
 
 // The canvas is an HTML element that allows for graphics rendering.
 // A canvas' context is the JavaScript object that provides methods, properties, and objects for manipulating said graphics on the canvas.
@@ -20,21 +22,22 @@ mainScene.input = new Input();
 
 // Sprites
 const sky = new Sprite({
-	resouce: resources.images.sky,
+	resource: resources.images.sky,
 	frameSize: new Vector2(320, 180)
 });
 const map = new Sprite({
-	resouce: resources.images.map,
+	resource: resources.images.map,
 	frameSize: new Vector2(320, 180),
 	position: new Vector2(120, 40)
 });
-const hero = new Hero();
+const hero = new Hero(gridCells(10), gridCells(3));
+const rod = new Rod(gridCells(11), gridCells(4));
 
 // Camera
 const camera = new Camera();
 
 // Add sprites to mainScene so they trigger in the class' update and render functions
-mainScene.addChildren([map, hero, camera]);
+mainScene.addChildren([map, hero, camera, rod]);
 
 // Entry points for the mainScene update and draw methods.
 const update = (delta) => {
