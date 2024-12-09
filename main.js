@@ -8,6 +8,7 @@ import { Hero } from './src/objects/Hero/Hero';
 import { Camera } from './src/Camera';
 import { Rod } from './src/objects/Rod/Rod';
 import { gridCells } from './src/helpers/grid';
+import { Inventory } from './src/objects/Inventory/Inventory';
 
 // The canvas is an HTML element that allows for graphics rendering.
 // A canvas' context is the JavaScript object that provides methods, properties, and objects for manipulating said graphics on the canvas.
@@ -32,6 +33,7 @@ const map = new Sprite({
 });
 const hero = new Hero(gridCells(10), gridCells(3));
 const rod = new Rod(gridCells(11), gridCells(4));
+const inventory = new Inventory();
 
 // Camera
 const camera = new Camera();
@@ -61,6 +63,9 @@ const draw = () => {
 
 	// Restore to original state
 	ctx.restore();
+
+	// Draw anything above the game world
+	inventory.draw(ctx, 0, 0);
 };
 
 // Pass in the update and draw methods to kick off GameLoop and Main Scene
