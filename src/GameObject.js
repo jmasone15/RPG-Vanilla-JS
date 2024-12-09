@@ -15,6 +15,7 @@ export class GameObject {
 		this.offset = offset ?? new Vector2(0, 0);
 		this.parent = null;
 		this.children = [];
+		this.isReady = false;
 	}
 
 	// Update runs children first and then parent.
@@ -24,8 +25,19 @@ export class GameObject {
 		// Call updates on all children first
 		this.children.forEach((child) => child.stepEntry(delta, root));
 
+		// Call ready on the first frame
+		if (!this.isReady) {
+			this.isReady = true;
+			this.ready();
+		}
+
 		// Call any internal step code.
 		this.step(delta, root);
+	}
+
+	// Called before the first 'step'
+	ready() {
+		// ....
 	}
 
 	step(_delta) {

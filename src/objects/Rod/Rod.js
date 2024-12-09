@@ -14,7 +14,10 @@ export class Rod extends GameObject {
 			offset: new Vector2(-8, 5)
 		});
 		this.addChild(this.body);
+	}
 
+	ready() {
+		console.log('ROD IS READY');
 		// Collision Event
 		events.on('HERO_POSITION', this, (heroPosition) => {
 			if (
