@@ -6,7 +6,10 @@ class Resources {
 			map: '/images/smallMap.png',
 			hero: '/images/hero-sheet.png',
 			shadow: '/images/shadow.png',
-			rod: '/images/rod.png'
+			rod: '/images/rod.png',
+			exit: '/images/exit.png',
+			cave: 'images/cave.png',
+			caveGround: '/images/cave-ground.png'
 		};
 
 		// A bucket to keep all of our images
