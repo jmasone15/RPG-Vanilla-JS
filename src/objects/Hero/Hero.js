@@ -7,8 +7,7 @@ import { Animations } from '../../Animations';
 import { FrameIndexPattern } from '../../FrameIndexPattern';
 import { heroAnimations } from './heroAnimations';
 import { moveTowards } from '../../helpers/moveTowards';
-import { gridCells, isSpaceFree } from '../../helpers/grid';
-import { walls } from '../../levels/levelOne';
+import { isSpaceFree } from '../../helpers/grid';
 import { events } from '../../Events';
 
 export class Hero extends GameObject {
@@ -65,7 +64,7 @@ export class Hero extends GameObject {
 
 		// Once destination has been reached, see if the player is holding down a movement key.
 		if (distance < 1) {
-			this.tryMove(root.input);
+			this.tryMove(root);
 		}
 
 		this.tryEmitPosition();
@@ -85,7 +84,7 @@ export class Hero extends GameObject {
 		events.emit('HERO_POSITION', this.body.position);
 	}
 
-	tryMove(input) {
+	tryMove({ input, level }) {
 		if (!input.direction) {
 			switch (this.facingDirection) {
 				case DIRECTIONS.LEFT:
@@ -120,7 +119,7 @@ export class Hero extends GameObject {
 		this.facingDirection = input.direction ?? this.facingDirection;
 
 		// Validate destination position here to determine if hero moves and which animation to show.
-		const spaceFreeCheck = isSpaceFree(walls, nextPos.x, nextPos.y);
+		const spaceFreeCheck = isSpaceFree(level?.walls, nextPos.x, nextPos.y);
 
 		// Update the hero's animation based on direction and if they can move to the next space.
 		if (input.direction === DIRECTIONS.DOWN) {
