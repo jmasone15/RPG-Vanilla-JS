@@ -5,13 +5,13 @@ import { Sprite } from '../../Sprite';
 import { events } from '../../Events';
 
 export class Exit extends GameObject {
-	constructor(x, y) {
+	constructor(x, y, offset) {
 		super({});
 
 		this.body = new Sprite({
 			resource: resources.images.exit,
 			position: new Vector2(x, y),
-			offset: new Vector2(-8, 8)
+			offset: offset
 		});
 		this.addChild(this.body);
 	}

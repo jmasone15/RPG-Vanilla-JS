@@ -3,12 +3,12 @@ class Resources {
 		// Everything we plan to download
 		this.toLoad = {
 			sky: '/images/sky.png',
-			map: '/images/smallMap.png',
+			map: '/images/ground.png',
 			hero: '/images/hero-sheet.png',
 			shadow: '/images/shadow.png',
 			rod: '/images/rod.png',
 			exit: '/images/exit.png',
-			cave: 'images/cave.png',
+			cave: '/images/cave.png',
 			caveGround: '/images/cave-ground.png'
 		};
 

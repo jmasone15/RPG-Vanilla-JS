@@ -11,7 +11,7 @@ import { isSpaceFree } from '../../helpers/grid';
 import { events } from '../../Events';
 
 export class Hero extends GameObject {
-	constructor(x, y) {
+	constructor(x, y, offset, itemPickupOffset) {
 		super({});
 
 		this.body = new Sprite({
@@ -21,7 +21,7 @@ export class Hero extends GameObject {
 			vFrames: 8,
 			frame: 1,
 			position: new Vector2(x, y),
-			offset: new Vector2(-17, -9),
+			offset: offset,
 			animations: new Animations({
 				walkDown: new FrameIndexPattern(heroAnimations.WALK_DOWN),
 				walkUp: new FrameIndexPattern(heroAnimations.WALK_UP),
@@ -46,6 +46,7 @@ export class Hero extends GameObject {
 		this.facingDirection = DIRECTIONS.DOWN;
 		this.itemPickupTime = 0;
 		this.itemPickupShell = null;
+		this.itemPickupOffset = itemPickupOffset;
 
 		events.on('HERO_ITEM_PICKUP', this, ({ image, position }) => {
 			this.onItemPickup(image, position);
@@ -165,7 +166,7 @@ export class Hero extends GameObject {
 				resource: image,
 				// Translate the position of the picked up item to be just above the hero's head.
 				position: new Vector2(position.x, position.y - 13),
-				offset: new Vector2(-8, 5)
+				offset: this.itemPickupOffset
 			})
 		);
 		this.addChild(this.itemPickupShell);

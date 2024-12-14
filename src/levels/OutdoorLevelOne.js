@@ -6,6 +6,8 @@ import { Rod } from '../objects/Rod/Rod';
 import { Exit } from '../objects/Exit/Exit';
 import { Vector2 } from '../Vector2';
 import { gridCells } from '../helpers/grid';
+import { CaveLevelOne } from './CaveLevelOne';
+import { events } from '../Events';
 
 export class OutdoorLevelOne extends Level {
 	constructor() {
@@ -21,38 +23,88 @@ export class OutdoorLevelOne extends Level {
 			frameSize: new Vector2(320, 180),
 			position: new Vector2(120, 40)
 		});
-		const hero = new Hero(gridCells(10), gridCells(3));
-		const rod = new Rod(gridCells(11), gridCells(4));
-		const exit = new Exit(gridCells(10), gridCells(5));
+		const hero = new Hero(
+			gridCells(15),
+			gridCells(4),
+			new Vector2(-17, -9),
+			new Vector2(-8, 0)
+		);
+		const rod = new Rod(gridCells(18), gridCells(4), new Vector2(-8, 2));
+		const exit = new Exit(gridCells(11), gridCells(5), new Vector2(-8, 8));
 
 		// Add sprites to level so they trigger in the class' update and render functions
 		this.addChildren([map, rod, exit, hero]);
+	}
 
-		// Walls
-		this.walls.add('144,48'); // House
-		this.walls.add('176,48'); // Water
+	ready() {
+		events.on('HERO_EXITS', this, () => {
+			events.emit('CHANGE_LEVEL', new CaveLevelOne());
+		});
+	}
+
+	setWalls() {
+		// Map Objects
+
+		this.walls.add(`352,128`);
+		this.walls.add(`336,128`);
+		this.walls.add(`320,128`); // Rocks ^
+
+		this.walls.add(`352,96`); // House
+
+		this.walls.add(`192,80`);
+		this.walls.add(`336,96`);
+		this.walls.add(`352,64`); // Trees ^
+
+		this.walls.add(`192,96`);
+		this.walls.add(`192,112`);
+		this.walls.add(`208,96`);
+		this.walls.add(`208,112`);
+		this.walls.add(`256,80`);
+		this.walls.add(`272,80`); // Stones ^
+
+		this.walls.add(`240,112`);
+		this.walls.add(`256,112`);
+		this.walls.add(`272,112`);
+		this.walls.add(`288,112`); // Water ^
 
 		// Borders
-		this.walls.add('128,16');
-		this.walls.add('144,16');
-		this.walls.add('160,16');
-		this.walls.add('176,16');
-		this.walls.add('192,16'); // Top ^
+		this.walls.add(`160,80`);
+		this.walls.add(`160,96`);
+		this.walls.add(`160,112`);
+		this.walls.add(`160,128`); // Left Wall ^
 
-		this.walls.add('128,96');
-		this.walls.add('144,96');
-		this.walls.add('160,96');
-		this.walls.add('176,96');
-		this.walls.add('192,96'); // Bottom ^
+		this.walls.add(`176,144`);
+		this.walls.add(`192,144`);
+		this.walls.add(`208,144`);
+		this.walls.add(`224,144`);
+		this.walls.add(`240,144`);
+		this.walls.add(`256,144`);
+		this.walls.add(`272,144`);
+		this.walls.add(`288,144`);
+		this.walls.add(`304,144`);
+		this.walls.add(`320,144`);
+		this.walls.add(`336,144`);
+		this.walls.add(`352,144`);
+		this.walls.add(`368,144`); // Bottom Wall ^
 
-		this.walls.add('112,32');
-		this.walls.add('112,48');
-		this.walls.add('112,64');
-		this.walls.add('112,80'); // Left ^
+		this.walls.add(`384,128`);
+		this.walls.add(`384,112`);
+		this.walls.add(`384,96`);
+		this.walls.add(`384,80`);
+		this.walls.add(`368,64`); // Right Wall ^
 
-		this.walls.add('208,32');
-		this.walls.add('208,48');
-		this.walls.add('208,64');
-		this.walls.add('208,80'); // Right ^
+		this.walls.add(`176,64`);
+		this.walls.add(`192,64`);
+		this.walls.add(`208,64`);
+		this.walls.add(`224,64`);
+		this.walls.add(`240,48`);
+		this.walls.add(`256,48`);
+		this.walls.add(`272,48`);
+		this.walls.add(`288,48`);
+		this.walls.add(`304,48`);
+		this.walls.add(`320,48`);
+		this.walls.add(`336,48`); // Top Wall ^
+
+		console.log('OUTDOOR LEVEL ONE WALLS CREATED...');
 	}
 }

@@ -2,6 +2,7 @@ import { GameObject } from '../../GameObject';
 import { Input } from '../../Input';
 import { Camera } from '../../Camera';
 import { Inventory } from '../Inventory/Inventory';
+import { events } from '../../Events';
 
 export class Main extends GameObject {
 	constructor() {
@@ -14,12 +15,19 @@ export class Main extends GameObject {
 		this.inventory = new Inventory();
 	}
 
+	ready() {
+		events.on('CHANGE_LEVEL', this, (newLevelInstance) => {
+			this.setLevel(newLevelInstance);
+		});
+	}
+
 	setLevel(newLevelInstance) {
 		if (this.level) {
 			this.level.destroy();
 		}
 
 		this.level = newLevelInstance;
+		this.level.setWalls();
 		this.addChild(this.level);
 	}
 

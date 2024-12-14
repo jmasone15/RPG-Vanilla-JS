@@ -5,13 +5,13 @@ import { resources } from '../../Resource';
 import { Vector2 } from '../../Vector2';
 
 export class Rod extends GameObject {
-	constructor(x, y) {
+	constructor(x, y, offset) {
 		super({});
 
 		this.body = new Sprite({
 			resource: resources.images.rod,
 			position: new Vector2(x, y),
-			offset: new Vector2(-8, 5)
+			offset: offset
 		});
 		this.addChild(this.body);
 	}

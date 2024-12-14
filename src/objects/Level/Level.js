@@ -6,4 +6,8 @@ export class Level extends GameObject {
 		this.background = null;
 		this.walls = new Set();
 	}
+
+	setWalls() {
+		// ...
+	}
 }
