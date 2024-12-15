@@ -1,14 +1,6 @@
 import { GameLoop } from './src/GameLoop';
-import { resources } from './src/Resource';
-import { Sprite } from './src/Sprite';
-import { Vector2 } from './src/Vector2';
-import { Input } from './src/Input';
-import { GameObject } from './src/GameObject';
-import { Hero } from './src/objects/Hero/Hero';
-import { Camera } from './src/Camera';
-import { Rod } from './src/objects/Rod/Rod';
-import { gridCells } from './src/helpers/grid';
-import { Inventory } from './src/objects/Inventory/Inventory';
+import { Main } from './src/objects/Main/Main';
+import { OutdoorLevelOne } from './src/levels/OutdoorLevelOne';
 
 // The canvas is an HTML element that allows for graphics rendering.
 // A canvas' context is the JavaScript object that provides methods, properties, and objects for manipulating said graphics on the canvas.
@@ -16,30 +8,8 @@ const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext('2d');
 
 // Main Game Object of the current Level.
-const mainScene = new GameObject({});
-
-// Give the mainScene the Input class of eventListeners so it can be referenced by children.
-mainScene.input = new Input();
-
-// Sprites
-const sky = new Sprite({
-	resource: resources.images.sky,
-	frameSize: new Vector2(320, 180)
-});
-const map = new Sprite({
-	resource: resources.images.map,
-	frameSize: new Vector2(320, 180),
-	position: new Vector2(120, 40)
-});
-const hero = new Hero(gridCells(10), gridCells(3));
-const rod = new Rod(gridCells(11), gridCells(4));
-const inventory = new Inventory();
-
-// Camera
-const camera = new Camera();
-
-// Add sprites to mainScene so they trigger in the class' update and render functions
-mainScene.addChildren([map, hero, camera, rod]);
+const mainScene = new Main();
+mainScene.setLevel(new OutdoorLevelOne());
 
 // Entry points for the mainScene update and draw methods.
 const update = (delta) => {
@@ -50,13 +20,15 @@ const draw = () => {
 	ctx.clearRect(0, 0, canvas.clientWidth, canvas.height);
 
 	// We want the sky backround to always be static, so draw it outside the relative camera position.
-	sky.drawImage(ctx, 0, 0);
+	mainScene.drawBackground(ctx);
 
 	// Save the current state (for camera offset)
 	ctx.save();
 
 	// Offset by camera position
-	ctx.translate(camera.position.x, camera.position.y);
+	if (mainScene.camera) {
+		ctx.translate(mainScene.camera.position.x, mainScene.camera.position.y);
+	}
 
 	// Draw objects in the mounted scene
 	mainScene.draw(ctx, 0, 0);
@@ -65,7 +37,7 @@ const draw = () => {
 	ctx.restore();
 
 	// Draw anything above the game world
-	inventory.draw(ctx, 0, 0);
+	mainScene.drawForeground(ctx);
 };
 
 // Pass in the update and draw methods to kick off GameLoop and Main Scene
