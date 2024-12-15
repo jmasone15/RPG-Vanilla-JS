@@ -9,8 +9,10 @@ import { Rod } from '../objects/Rod/Rod';
 import { events } from '../Events';
 import { OutdoorLevelOne } from './OutdoorLevelOne';
 
+const DEFAULT_HERO_POSITION = new Vector2(gridCells(2), gridCells(0));
+
 export class CaveLevelOne extends Level {
-	constructor() {
+	constructor(params = {}) {
 		super({});
 		this.background = new Sprite({
 			resource: resources.images.cave,
@@ -23,9 +25,11 @@ export class CaveLevelOne extends Level {
 		});
 		const exit = new Exit(gridCells(3), gridCells(4), new Vector2(0, 16));
 		const rod = new Rod(gridCells(5), gridCells(0), new Vector2(-2, 12));
+
+		this.heroStartPosition = params.heroPosition ?? DEFAULT_HERO_POSITION;
 		const hero = new Hero(
-			gridCells(2),
-			gridCells(0),
+			this.heroStartPosition.x,
+			this.heroStartPosition.y,
 			new Vector2(-9, 0),
 			new Vector2(0, 8)
 		);
@@ -34,7 +38,12 @@ export class CaveLevelOne extends Level {
 
 	ready() {
 		events.on('HERO_EXITS', this, () => {
-			events.emit('CHANGE_LEVEL', new OutdoorLevelOne());
+			events.emit(
+				'CHANGE_LEVEL',
+				new OutdoorLevelOne({
+					heroPosition: new Vector2(gridCells(11), gridCells(6))
+				})
+			);
 		});
 	}
 

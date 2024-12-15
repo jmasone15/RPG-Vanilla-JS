@@ -5,6 +5,7 @@ export class Level extends GameObject {
 		super({});
 		this.background = null;
 		this.walls = new Set();
+		this.heroStartPosition = null;
 	}
 
 	setWalls() {
