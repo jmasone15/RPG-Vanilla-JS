@@ -1,6 +1,6 @@
 import { GameLoop } from './src/GameLoop';
 import { Main } from './src/objects/Main/Main';
-import { OutdoorLevelOne } from './src/levels/OutdoorLevelOne';
+import { CaveLevelOne } from './src/levels/CaveLevelOne';
 
 // The canvas is an HTML element that allows for graphics rendering.
 // A canvas' context is the JavaScript object that provides methods, properties, and objects for manipulating said graphics on the canvas.
@@ -9,7 +9,7 @@ const ctx = canvas.getContext('2d');
 
 // Main Game Object of the current Level.
 const mainScene = new Main();
-mainScene.setLevel(new OutdoorLevelOne());
+mainScene.setLevel(new CaveLevelOne());
 
 // Entry points for the mainScene update and draw methods.
 const update = (delta) => {

@@ -16,6 +16,8 @@ export class GameObject {
 		this.parent = null;
 		this.children = [];
 		this.isReady = false;
+		this.isSolid = false;
+		this.drawLayer = null;
 	}
 
 	// Update runs children first and then parent.

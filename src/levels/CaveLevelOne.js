@@ -8,6 +8,7 @@ import { Hero } from '../objects/Hero/Hero';
 import { Rod } from '../objects/Rod/Rod';
 import { events } from '../Events';
 import { OutdoorLevelOne } from './OutdoorLevelOne';
+import { NPC } from '../objects/NPC/NPC';
 
 const DEFAULT_HERO_POSITION = new Vector2(gridCells(2), gridCells(0));
 
@@ -33,7 +34,10 @@ export class CaveLevelOne extends Level {
 			new Vector2(-9, 0),
 			new Vector2(0, 8)
 		);
-		this.addChildren([ground, exit, rod, hero]);
+
+		const npc = new NPC(gridCells(5), gridCells(5));
+
+		this.addChildren([ground, exit, rod, hero, npc]);
 	}
 
 	ready() {

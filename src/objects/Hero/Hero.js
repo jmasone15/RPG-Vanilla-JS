@@ -120,7 +120,13 @@ export class Hero extends GameObject {
 		this.facingDirection = input.direction ?? this.facingDirection;
 
 		// Validate destination position here to determine if hero moves and which animation to show.
-		const spaceFreeCheck = isSpaceFree(level?.walls, nextPos.x, nextPos.y);
+		const spaceIsFree = isSpaceFree(level?.walls, nextPos.x, nextPos.y);
+		const solidBodyAtSpace = this.parent.children.find((c) => {
+			return (
+				c.isSolid && c.position.x === nextPos.x && c.position.y === nextPos.y
+			);
+		});
+		const spaceFreeCheck = spaceIsFree && !solidBodyAtSpace;
 
 		// Update the hero's animation based on direction and if they can move to the next space.
 		if (input.direction === DIRECTIONS.DOWN) {
